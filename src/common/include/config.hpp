@@ -16,16 +16,16 @@ const size_t CHUNK_SIZE_BYTES = 64 * 1024;
 const std::string CSV_OUTPUT_FILE_PREFIX = "benchmark"; // <--- ПРОВЕРЬТЕ ЭТО ИМЯ
 
 // --- Настройки сервера gRPC ---
-const std::string GRPC_SERVER_ADDRESS = "127.0.0.1";
+const std::string GRPC_SERVER_ADDRESS = "212.67.17.60";
 const int GRPC_SERVER_PORT = 50051;
 
 // --- Настройки сервера Cap'n Proto ---
 const std::string CAPNP_SERVER_ADDRESS = "0.0.0.0";
 const int CAPNP_SERVER_PORT = 50052;
-const std::string CAPNP_CLIENT_CONNECT_TO ="127.0.0.1";
+const std::string CAPNP_CLIENT_CONNECT_TO ="212.67.17.60";
 
 // --- Настройки клиента ---
-const std::string TARGET_SERVER_IP = "127.0.0.1";
+const std::string TARGET_SERVER_IP = "212.67.17.60";
 
 
 // --- Настройки для метрик ---
