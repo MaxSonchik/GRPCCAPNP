@@ -1,0 +1,16 @@
+syntax = "proto3";
+package benchmark_grpc;
+
+message ChunkRequest {
+  bytes data_chunk = 1;
+  int64 client_assigned_chunk_id = 2; // ID от клиента
+}
+
+message ChunkResponse {
+  bytes reversed_chunk_data = 1;
+  int64 original_client_chunk_id = 2; // ID, который был в запросе
+}
+
+service FileProcessor {
+  rpc ProcessFileChunks(stream ChunkRequest) returns (stream ChunkResponse);
+}

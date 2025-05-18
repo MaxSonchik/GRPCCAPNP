@@ -1,0 +1,31 @@
+capnp_server
+capnp_client
+grpc_server
+grpc_client
+tcp_server       # Если у вас остались от TCP
+tcp_client       # Если у вас остались от TCP
+generate_test_file # Если была такая утилита
+
+# Объектные файлы
+*.o
+*.lo
+*.slo
+*.la
+
+
+gen_proto/
+gen_capnp/
+
+
+*.log
+*.tmp
+*.swp
+*~
+.DS_Store # для macOS
+
+test_file.dat
+
+
+*.csv
+
+.vscode
