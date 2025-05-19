@@ -159,7 +159,6 @@ ABSL_LIBS = \
 GRPC_CORE_DEPS = -lgrpc -lgpr -laddress_sorting -lcares -lre2 -lssl -lcrypto -lz
 GRPC_REFLECTION_LIB = -lgrpc++_reflection # <--- ДОБАВЛЯЕМ ЭТУ СТРОКУ
 GRPC_LIBS = $(GRPC_LIBS_PKG) $(ABSL_LIBS) $(GRPC_CORE_DEPS) $(GRPC_REFLECTION_LIB) -lpthread -ldl -lrt
-
 GRPC_SERVER_SRC = $(GRPC_DIR)/grpc_server.cpp
 GRPC_CLIENT_SRC = $(GRPC_DIR)/grpc_client.cpp
 GRPC_GENERATED_HEADERS = $(GRPC_GEN_DIR)/benchmark.pb.h $(GRPC_GEN_DIR)/benchmark.grpc.pb.h
