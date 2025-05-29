@@ -195,11 +195,6 @@ int main(int argc, char* argv[]) {
         } // конец while(true)
         std::cout << "[DEBUG] Server main: Exited while(true) loop." << std::endl;
 
-        // Если вышли из цикла, возможно, стоит подождать завершения задач перед выходом из main
-        // if (!tasks.isEmpty()) {
-        //     KJ_LOG(INFO, "Waiting for tasks to complete...");
-        //     tasks. ότανEmpty().wait(waitScope); // Ожидаем, пока все задачи не завершатся
-        // }
 
     } catch (const kj::Exception& e) {
         std::cerr << "[ERROR] Server main: Outer KJ Exception caught: " << e.getDescription().cStr() << std::endl;
@@ -215,3 +210,7 @@ int main(int argc, char* argv[]) {
     std::cout << "[DEBUG] Server main: Program finished normally (should not happen for a server if loop was infinite)." << std::endl;
     return 0;
 }
+
+
+
+

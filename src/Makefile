@@ -85,11 +85,6 @@
 # 	@echo "Code formatting is correct."
 
 
-# Makefile
-
-# Компиляторы и флаги
-# Makefile
-
 # Компиляторы и флаги
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -O2 -pthread # -O2 для релиза, можно -g для отладки
@@ -110,10 +105,6 @@ GRPC_CPP_PLUGIN = grpc_cpp_plugin
 GRPC_CPP_PLUGIN_PATH = $(shell which $(GRPC_CPP_PLUGIN)) # Должен найти /usr/bin/grpc_cpp_plugin
 PROTO_FILE = benchmark.proto
 
-# Флаги для gRPC C++ кода
-# -I/usr/include для системных gRPC/protobuf заголовков
-# -I$(GRPC_GEN_DIR) для сгенерированных
-# -I. для benchmark.proto, если он импортирует другие proto из текущей директории
 GRPC_CFLAGS_PKG = $(shell pkg-config --cflags grpc++ protobuf)
 GRPC_CFLAGS = $(GRPC_CFLAGS_PKG) -I/usr/include -I$(GRPC_GEN_DIR) -I.
 
@@ -124,8 +115,7 @@ GRPC_LIBS_PKG = $(shell pkg-config --libs grpc++ protobuf) # Основные
 # Пока не добавляем рефлексию явно, если основные примеры не требуют.
 # Если серверу нужна рефлексия, добавьте -lgrpc++_reflection
 
-# Abseil библиотеки (примерный список, может потребоваться уточнение)
-# Убедитесь, что пакет abseil-cpp установлен
+# Abseil библиотеки
 ABSL_LIBS = \
     -labsl_log_internal_check_op -labsl_log_internal_message -labsl_log_internal_format \
     -labsl_log_internal_nullguard -labsl_log_internal_conditions -labsl_log_internal_globals \

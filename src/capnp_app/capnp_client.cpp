@@ -67,7 +67,7 @@ bool regenerate_new_file = true; // ИСПРАВЛЕНО ИМЯ ПЕРЕМЕНН
                    << "' does not exist. Generating." << std::endl;
     }
 
-    if (regenerate_new_file) { // ИСПРАВЛЕНО ИМЯ ПЕРЕМЕННОЙ
+    if (regenerate_new_file) {
         if (!benchmark_common::generate_test_file(test_filename, target_file_size_bytes)) {
             std::cerr << "[CLIENT ERROR] Failed to generate test file '" << test_filename << "'. Exiting." << std::endl;
             metrics.log_error("Failed to generate test file");

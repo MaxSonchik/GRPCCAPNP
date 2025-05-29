@@ -17,18 +17,16 @@ import (
 )
 
 func main() {
-	// Парсинг аргументов командной строки для IP сервера
-	// flag.String определяет строковый флаг с именем, значением по умолчанию и описанием.
+
 	serverIP := flag.String("server_ip", config.DefaultServerIP, "IP address of the TCP server")
-	flag.Parse() // Анализирует аргументы командной строки.
+	flag.Parse()
 
 	log.Printf("Go TCP Client: Using server IP: %s:%s\n", *serverIP, config.TCPServerPort)
 
 	// 1. Генерация тестового файла
 	fileutils.GenerateTestFileIfNotExists(config.TestFileName, config.TotalFileSize)
 
-	// Проверка, что файл действительно создан и имеет правильный размер
-	// (GenerateTestFileIfNotExists уже делает log.Fatal при ошибке, но для уверенности)
+
 	info, err := os.Stat(config.TestFileName)
 	if err != nil || info.Size() != config.TotalFileSize {
 		log.Fatalf("Go TCP Client: Test file '%s' issue. Size: %d (expected %d), Error: %v. Aborting.",
@@ -49,9 +47,8 @@ func main() {
 	defer conn.Close() // Гарантируем закрытие соединения.
 	log.Printf("Go TCP Client: Connected to %s\n", serverAddr)
 
-	// Устанавливаем таймауты на чтение/запись, если нужно (для предотвращения вечного зависания)
-	// conn.SetReadDeadline(time.Now().Add(60 * time.Second)) // Пример: 60 сек на чтение
-	// conn.SetWriteDeadline(time.Now().Add(60 * time.Second)) // Пример: 60 сек на запись
+	 conn.SetReadDeadline(time.Now().Add(60 * time.Second)) // Пример: 60 сек на чтение
+	 conn.SetWriteDeadline(time.Now().Add(60 * time.Second)) // Пример: 60 сек на запись
 
 	// 4. Инициализация ChunkReader
 	chunkReader, err := fileutils.NewChunkReader(config.TestFileName, config.ChunkSize)
@@ -69,44 +66,37 @@ func main() {
 	}
 
 	for i := 0; ; i++ {
-		// Читаем следующий чанк из файла
 		chunkData, err := chunkReader.ReadNextChunk()
 		if err != nil {
 			if err == io.EOF { // Конец файла
-				if len(chunkData) == 0 { // Убеждаемся, что это чистый EOF без данных
+				if len(chunkData) == 0 {
 					log.Println("Go TCP Client: EOF reached, all data read from file.")
 					break
 				}
-				// Если EOF, но данные есть - это последний чанк, обрабатываем его
 			} else {
 				log.Printf("Go TCP Client: Error reading chunk %d from file: %v. Aborting.\n", i, err)
-				// При ошибке чтения файла останавливаем таймер перед выходом
 				metricsAggregator.StopTimer()
 				metricsAggregator.PrintSummary()
 				metricsAggregator.SaveToCSV()
-				os.Exit(1) // Выход с кодом ошибки
+				os.Exit(1)
 			}
 		}
 
-		if len(chunkData) == 0 && chunkReader.EOF() { // Дополнительная проверка для случая пустого файла или после последнего чанка
-			if i == 0 && chunkReader.FileSize() == 0 { // Пустой файл
+		if len(chunkData) == 0 && chunkReader.EOF() {
+			if i == 0 && chunkReader.FileSize() == 0 {
 				break
 			}
-			if i > 0 && chunkReader.EOF() { // Уже обработали все чанки, и это подтвержденный EOF
+			if i > 0 && chunkReader.EOF() {
 				break
 			}
 		}
 
-		// Готовим ожидаемый реверсированный чанк для верификации
-		// Важно создать копию chunkData перед реверсом, если ReverseBytes делает это на месте,
-		// или если chunkData - это буфер, который будет перезаписан.
-		// GetReversedBytes уже возвращает копию.
 		expectedReversedChunk := reversal.GetReversedBytes(chunkData)
 
-		// Замеряем RTT
+
 		rttStartTime := time.Now()
 
-		// Отправляем чанк серверу
+
 		err = messaging.WriteMessage(conn, chunkData)
 		if err != nil {
 			log.Printf("Go TCP Client: Error writing chunk %d to server: %v. Aborting.\n", i, err)
@@ -148,7 +138,7 @@ func main() {
 			metricsAggregator.SaveToCSV()
 			os.Exit(1)
 		}
-		// log.Printf("Go TCP Client: Chunk %d (size %d) sent, received, and verified OK. RTT: %s\n", i, len(chunkData), rtt)
+		 log.Printf("Go TCP Client: Chunk %d (size %d) sent, received, and verified OK. RTT: %s\n", i, len(chunkData), rtt)
 		if chunkReader.EOF() && len(chunkData) > 0 { // Если это был последний чанк с данными
 			log.Printf("Go TCP Client: Processed final chunk %d from file.\n", i)
 			break // Выходим из цикла после обработки последнего чанка
@@ -156,7 +146,7 @@ func main() {
 	}
 
 	// 6. Остановка таймера и вывод результатов
-	metricsAggregator.StopTimer() // Вызовет сбор метрик памяти
+	metricsAggregator.StopTimer()
 	metricsAggregator.PrintSummary()
 	err = metricsAggregator.SaveToCSV()
 	if err != nil {
